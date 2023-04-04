@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Page</title>
+    <script type="text/javascript" src="/adminPageScript.js" type="text/javascript" defer></script>
+    <link rel="stylesheet" href="/btn-type-2.css" type="text/css">
+    <link rel="stylesheet" href="/adminPageStyle.css" type="text/css">
+</head>
+<body>
+    <header>
+        <%- include('header',{stauts: 1, msg: 6}); %>
+    </header>
+
+    <main>
+        <div class="container">
+            <div class="container-left">
+                <h2>Options</h2>
+                <ul>
+                    <!-- <li>Add New Seller</li>
+                    <li>Remove Seller</li> -->
+                    <li><button id="addProduct">Add Product</button></li>
+                    <li><button id="editProduct">Edit Product</button></li>
+                    <!-- <li><button>Remove Product</button></li> -->
+                    <li><button id="logout">Log Out</button></li>
+                </ul>
+            </div>
+            <div class="container-right">
+                <p id="errormsg"> <% if(active){ %> <%= errormsg %><% } %></p>
+                <form id="add-product-form" action="/product/add-product" method="post" enctype="multipart/form-data">
+                    <div>
+                        <label for="name">Product Name : </label>
+                        <input type="text" placeholder="Product Name" name="name">
+                    </div>
+                    <div>
+                        <label for="displayName">Display Name : </label>
+                        <input type="text" placeholder="Display name" name="displayName">
+                    </div>
+                    <div>
+                        <label for="price">Product Price : </label>
+                        <input type="text" placeholder="Product Price" name="price">
+                    </div>
+                    <div>
+                        <label for="color">Product Color : </label>
+                        <input type="text" placeholder="Product color" name="color">
+                    </div>
+                    <div>
+                        <label for="description">Product Description : </label>
+                        <input type="text" placeholder="Product description" name="description">
+                    </div>
+                    <div>
+                        <label for="quantity">Product quantity : </label>
+                        <input type="text" placeholder="Product quantity" name="quantity">
+                    </div>
+                    <div>
+                        <label for="image">Choose image : </label>
+                        <input type="file" placeholder="Product image" name="image">
+                    </div>
+                    <div><div></div><input class="btn-type-2" type="submit" id="add-productbtn" value="Add Product"></div>
+                </form>
+                <%- include('editProducts'); %>
+            <!-- <div class="container-right">
+                <table class="">
+                    <tr>
+                        <th>Sr. No.</th>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>SellerID</th>
+                        <th></th>
+                        <th></th>
+                    </tr>
+                    <tr>
+                        <td>1</td>
+                        <td>Kapil</td>
+                        <td>kapilbadgujjar99@gmail.com</td>
+                        <td>1</td>
+                        <td><button>Change details</button></td>
+                        <td><button>Remove Seller</button></td>
+                    </tr>
+                </table>
+            </div> -->
+        </div>
+    </main>
+
+    <footer>
+
+    </footer>
+</body>
+</html>

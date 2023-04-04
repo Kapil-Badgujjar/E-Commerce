@@ -1,0 +1,144 @@
+<div id="edit-product-div">
+    <div class="grid" id="product-grid">
+    </div>
+</div>
+<form id="edit-form" action="/product/update-product" method="post" enctype="multipart/form-data">
+    <div>
+        <input type="text" id="pid" style="display: none;" name="pid">
+        <label for="name">Product Name : </label>
+        <input id="name" type="text" placeholder="Product Name" name="name">
+    </div>
+    <div>
+        <label for="displayName">Display Name : </label>
+        <input id="dName" type="text" placeholder="Display name" name="displayName">
+    </div>
+    <div>
+        <label for="price">Product Price : </label>
+        <input id="price" type="text" placeholder="Product Price" name="price">
+    </div>
+    <div>
+        <label for="color">Product Color : </label>
+        <input id="color" type="text" placeholder="Product color" name="color">
+    </div>
+    <div>
+        <label for="description">Product Description : </label>
+        <input id="description" type="text" placeholder="Product description" name="description">
+    </div>
+    <div>
+        <label for="quantity">Product quantity : </label>
+        <input id="quantity" type="text" placeholder="Product quantity" name="quantity">
+    </div>
+    <div>
+        <label for="image">Choose a new image : </label>
+        <input type="file" placeholder="Product image" name="image">
+    </div>
+    <div>
+        <div></div><input class="btn-type-2" style="margin-right: 20px !important;" type="submit" id="Update"
+            value="Update">
+    </div>
+</form>
+</div>
+<script type="text/javascript">
+    let productsArray = [];
+    window.addEventListener('load', () => {
+        let request = new XMLHttpRequest();
+        request.open('GET', '/getAllProducts');
+        request.setRequestHeader('Content-Type', 'application/json');
+        request.send();
+
+        request.onload = function () {
+            if (this.status == 404) {
+                alert('No products found!');
+                return;
+            }
+            if (this.status == 200 || this.status == 401) {
+                let data = this.responseText;
+                data = JSON.parse(data);
+                if (data.length != 0) {
+                    data.forEach(function (obj) {
+                        productsArray.push(obj);
+                    })
+                    data.forEach(function (obj) {
+                        addProductToPage(obj);
+                    });
+                }
+            }
+        };
+
+    });
+    function addProductToPage(obj) {
+        let myGrid = document.getElementById('product-grid');
+        let newGridItem = document.createElement('div');
+        newGridItem.setAttribute("class", "grid-item");
+        newGridItem.setAttribute("id", `grid-item-${obj.productID}`);
+        newGridItem.innerHTML = `<img class="productsImage" src="/${obj.imageSource}">
+        <div class="description-div" id="description-div-${obj.productID}" >
+            <table class="description-table" id="table-${obj.productID}">
+                <tr>
+                    <th>Specifications: </th>
+                    <th></th>
+                </tr>
+                <tr>
+                    <td>Name:</td>
+                    <td>${obj.name}</td>
+                </tr>
+                <tr>
+                    <td>Price:</td>
+                    <td>Rs. - ${obj.price}</td>
+                </tr>
+                <tr>
+                    <td>Color</td>
+                    <td>${obj.color}</td>
+                </tr>
+            </table>
+            <div class="product-name"><strong>${obj.displayName}</strong></div>
+        </div>
+        <div class="button-div" id="cart-${obj.productID}"> <button  class="btn-type-2" onclick="fetchProduct(${obj.productID})">Update Product</button><button class="btn-type-2" id="description-${obj.productID}" onclick="deleteProduct(${obj.productID})">Delete</button></div>`;
+        myGrid.appendChild(newGridItem);
+    };
+    function fetchProduct(productID) {
+        const request = new XMLHttpRequest();
+        request.open('POST', `/product/edit-product`);
+        request.setRequestHeader('Content-Type', 'application/json');
+        request.send(JSON.stringify({
+            productID: productID
+        }));
+        request.onload = () => {
+            if (request.status == 200) {
+                let product = JSON.parse(request.responseText)[0];
+                if (product.length == 0) return;
+                document.getElementById('edit-product-div').style.display = "none";
+                document.getElementById('edit-form').style.display = "flex";
+                document.getElementById('pid').value = product.productID;
+                document.getElementById('name').value = product.name;
+                document.getElementById('dName').value = product.displayName;
+                document.getElementById('price').value = product.price;
+                document.getElementById('color').value = product.color;
+                document.getElementById('description').value = product.description;
+                document.getElementById('quantity').value = product.availableStocks;
+            }
+        }
+    };
+
+    function deleteProduct(productID) {
+        const request = new XMLHttpRequest();
+        request.open('POST', `/product/delete-product`);
+        request.setRequestHeader('Content-Type', 'application/json');
+        request.send(JSON.stringify({
+            productID: productID
+        }));
+        request.onload = () => {
+            if (request.status == 200) {
+                alert('Product deleted successfully');
+                document.getElementById('add-product-form').style.display = "none";
+                document.getElementById('edit-form').style.display = "none";
+                document.getElementById('edit-product-div').style.display = "grid";
+                let item = document.getElementById(`grid-item-${productID}`);
+                item.parentElement.removeChild(item);
+            } else {
+                alert('Some error occured! Product not deleted');
+            }
+            return;
+        }
+    };
+</script>

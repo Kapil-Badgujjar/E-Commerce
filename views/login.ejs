@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <link rel="stylesheet" href="style.css" type="text/css">
+    <script src="../userAuthentication.js" type="text/javascript" defer></script>
+</head>
+<body>
+    <%- include('header',{status: 1, msg: 1}); %>
+    <form method="POST" action="/login">
+        <label for="username" style="display: none">Username</label>
+        <input id="username" style="display: none" type="text" name="username" placeholder="Username" value="-">
+        <label for="email">E-mail</label>
+        <input id="email" type="email" name="email" placeholder="E-mail">
+        <label for="password">Password</label>
+        <input id="password" type="password" name="password" placeholder="Password">
+        <input  id="submit-btn" class="btn" type="submit" value="Login">
+        <p id="errmsg"></p>
+        <div style="margin-top: 10px;">Forgot Password?  <a href="/reset/forgotPassword">Reset Password</a></div>
+        <div>Don't have account!   <a href="/signup">Create new</a></div>
+        <div>Go back to home page <a href="/">Home</a></div>
+    </form>
+</body>
+</html>

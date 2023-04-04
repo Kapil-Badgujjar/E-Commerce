@@ -1,0 +1,250 @@
+<style>
+    *{
+        margin: 0;
+        padding: 0;
+    }
+    body {
+        padding-top: 9vh;
+        background-color: rgb(210, 210, 210);
+    }
+    .container{
+        min-height: 60vh;
+    }
+    .grid{
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+        grid-template-rows: repeat(auto, 300px);
+        grid-gap: 5px;
+        padding: 0 20px;
+    }
+    .grid-item{
+        background-color: rgba(255, 255, 255, 0.942);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: flex-start;
+        padding-bottom: 15px;
+    }
+    th{
+        text-align: left;
+    }
+    @keyframes scale {
+        from{
+            transform: scale(1);
+        }
+        to {
+            transform: scale(1.03);
+        }
+    }
+    .productsImage{
+        padding: 5px 0;
+        margin-top: 4px;
+        width: 90%;
+        height: 260px;
+        border-radius: 2%;
+    }
+    .grid-item:hover{
+        animation: scale 0.6s forwards;
+        border-radius: 3px;
+        background-color: rgb(255, 255, 255);
+    }
+    .product-name{
+        box-sizing: border-box;
+        width: 100%;
+        font-size: 1rem;
+        background-color: rgb(255, 255, 255);
+        padding: 2px 5px;
+        text-align: center;
+    }
+    .button-div{
+        width: 92%;
+        display: flex;
+        justify-content: space-between;
+    }
+    .load-more-btn{
+        display: flex;
+        margin-top: 20px;
+        align-items: center;
+        justify-content: center;
+        height: 40px;
+    }
+    .description-div{
+        width: 90%;
+        position: relative;
+        top: -8%;
+        height: 15px;
+        z-index: 2;
+        transition: all 0.25s ease;
+    }
+    .description-table{
+        width:100%;
+        display: none;
+        padding: 2px 5px;
+        background-color: rgba(255, 255, 255, 0.500);
+        border-radius: 10px 10px 0px 0px;
+        backdrop-filter: blur(20px);
+    }
+    .home-page-footer{
+    background-color: rgb(28, 28, 28);
+    color: white;
+    height: auto;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
+    }
+    ul{
+        list-style: none;
+        color: white;
+        padding: 20px;
+    }
+    ul>li{
+        padding: 4px 0px;
+    }
+    ul>li>a{
+        text-decoration: none;
+        color: white;
+    }
+</style>
+<div>
+    <div class="container">
+        <div class="grid" id="product-grid">
+        </div>
+    </div>
+</div>
+<div class="load-more-btn">
+    <button id="load-more-btn" class="btn-type-2" style="width: fit-content" onclick="loadMoreProducts()">Load More</button>
+</div>
+<footer>
+    <div class="home-page-footer">
+        <div><ul>
+            <li><a href="/">Home</a></li>
+            <li><a href="/login">Login</a></li>
+            <li><a href="/signup">SignUp</a></li>
+            <li><a href="/admin">Admin Login</a></li>
+            <li><a href="/help">Help</a></li>
+        </ul></div>
+        <div><ul>
+            <li>E-Commerce Project</li>
+            <li>Follow Us on Insta@xyz</li>
+            <li>Sample line</li>
+            <li>Test line</li>
+            <li>No more links available</li>
+        </ul></div>
+        <div><ul>
+            <li>Contact US</li>
+            <li>Kapil Badgujjar</li>
+            <li>Phone: +9198173628##</li>
+            <li>k.b.cool.boy99@gmail.com</li>
+            <li>Jhajjar, Haryana</li>
+        </ul></div>
+    </div>
+</footer>
+<script type="text/javascript">
+    let productsArray=[];
+    window.addEventListener('load',()=>{
+        let request = new XMLHttpRequest();
+        request.open('GET','/setInitialValues');
+        request.setRequestHeader('Content-Type','application/json');
+        request.send();
+        request.onload = function(){
+            loadMoreProducts();
+        }
+    });
+    function loadMoreProducts(){
+        let request = new XMLHttpRequest();
+        request.open('GET','/getData');
+        request.setRequestHeader('Content-Type','application/json');
+        request.send();
+
+        request.onload = function() {
+            if(this.status==404){
+                document.getElementById('load-more-btn').style.display = 'none';
+                alert('No products found!');
+                return;
+            }
+            if(this.status==200||this.status==401){
+                let data=this.responseText;
+                data=JSON.parse(data);
+                if(data.length!=0){
+                    data.forEach(function(obj){
+                        productsArray.push(obj);
+                    })
+                    data.forEach(function(obj){
+                        addProductToPage(obj);
+                    });
+                    if(this.status==401){
+                        document.getElementById('load-more-btn').style.display = 'none';
+                    }
+                }
+                else {
+                    document.getElementById('load-more-btn').style.display = 'none';
+                }
+            }
+        };
+
+    };
+    function addProductToPage(obj){
+        let myGrid = document.getElementById('product-grid');
+        let newGridItem = document.createElement('div');
+        newGridItem.setAttribute("class","grid-item");
+        newGridItem.innerHTML=`<img class="productsImage" src="/${obj.imageSource}">
+        <div class="description-div" id="description-div-${obj.productID}" >
+            <table class="description-table" id="table-${obj.productID}">
+                <tr>
+                    <th>Specifications: </th>
+                    <th></th>
+                </tr>
+                <tr>
+                    <td>Name:</td>
+                    <td>${obj.name}</td>
+                </tr>
+                <tr>
+                    <td>Price:</td>
+                    <td>Rs. - ${obj.price}</td>
+                </tr>
+                <tr>
+                    <td>Color</td>
+                    <td>${obj.color}</td>
+                </tr>
+            </table>
+            <div class="product-name"><strong>${obj.displayName}</strong></div>
+        </div>
+        <div class="button-div" id="cart-${obj.productID}"> <button  class="btn-type-2" onclick="addToUserCart(${obj.productID})">Add to Cart</button><button class="btn-type-2" id="description-${obj.productID}" onclick="showDetails(${obj.productID})">Show details</button></div>`;
+        myGrid.appendChild(newGridItem);
+    };
+    function addToUserCart(id){
+        let addItem = new XMLHttpRequest();
+        addItem.open('post','/cart/addToUserCart');
+        addItem.setRequestHeader('Content-Type','application/json');
+        addItem.send(JSON.stringify({productID:id}));
+        addItem.onload = function(){
+            if(addItem.status==200){
+                return;
+            }
+            else{
+                window.location.href='/login';
+            }
+        }
+    };
+    function showDetails(id){
+        document.getElementById(`table-${id}`).style.display="table";
+        let descriptionDiv = document.getElementById(`description-div-${id}`);
+        descriptionDiv.style.top = "-35%";
+        let btn = document.getElementById(`description-${id}`);
+        btn.innerText='Hide details';
+        btn.removeEventListener('click',showDetails);
+        btn.addEventListener('click',function(){
+            hideDetails(id);
+        });
+    }
+    function hideDetails(id){
+        document.getElementById(`table-${id}`).style.display="none";
+        let descriptionDiv = document.getElementById(`description-div-${id}`);
+        descriptionDiv.style.top = "-8%";        
+        let btn = document.getElementById(`description-${id}`);
+        btn.innerText='Show details';
+        btn.removeEventListener('click',hideDetails);
+        btn.addEventListener('click',function(){
+            showDetails(id);
+        });
+    }
+</script>

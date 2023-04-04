@@ -1,0 +1,144 @@
+<style>
+  body {
+    padding-top: 9vh;
+    background-color: antiquewhite;
+  }
+  @keyframes scale {
+        from{
+            transform: scale(1);
+        }
+        to {
+            transform: scale(1.03);
+        }
+    }
+  .grid {
+    display: grid;
+    width: 60vw;
+    margin: 3px auto 0 10%;
+    grid-template-columns: repeat(8, 1fr);
+    grid-template-rows: repeat(2, 1fr);
+    grid-gap: 2px;
+    background-color: white;
+  }
+  .grid:hover{
+    animation: scale 0.5s forwards;
+  }
+  img {
+    width: 80px;
+    grid-area: 1/1/3/2;
+  }
+  .product-name {
+    grid-area: 1/2/2 / span 3;
+  }
+  .product-price {
+    grid-area: 2/2/3 / span 3;
+  }
+  .product-quantity {
+    grid-area: 1/5/2 / span 2;
+  }
+  .quantity-number {
+    grid-area: 1/7/2/8;
+  }
+  .remove-product-btn {
+    grid-area: 2/7/3/8;
+  }
+  .quantity-inc-btn {
+    grid-area: 2/8/3/9;
+  }
+  .quantity-dec-btn {
+    grid-area: 1/8/2/9;
+  }
+
+</style>
+<div id="parentDiv" class="cart-list">
+  <!-- <div class="grid">
+        <img src="product1.jpg">
+        <p class="product-name">Product name: </p>
+        <p class="product-price">Price: </p>
+        <p class="product-quantity">Quantity: </p>
+        <p class="quantity-number">0</p>
+        <button id="increase" class="quantity-inc-btn"> + </button>
+        <button id="decrease" class="quantity-dec-btn"> - </button>
+    </div> -->
+</div>
+<script type="text/javascript">
+  // let productsArray=[];
+  window.addEventListener("load", function () {
+    let request = new XMLHttpRequest();
+    request.open("GET", "/cart/getUserCart");
+    request.setRequestHeader("Content-Type", "application/json");
+    request.send();
+    request.addEventListener("load", () => {
+      if (request.status != 200) {
+        return;
+      }
+      let productsArray = JSON.parse(request.responseText);
+      productsArray.forEach((product) => {
+        addProductsToPage(product);
+      });
+    });
+  });
+
+  function addProductsToPage(obj) {
+    let parentDiv = document.getElementById("parentDiv");
+    let childItem = document.createElement("div");
+    childItem.setAttribute("class", "grid");
+    childItem.setAttribute("id", `grid-div-${obj.productID}`);
+    childItem.innerHTML = `<img src="/${obj.imageSource}">
+        <p class="product-name">Product name: ${obj.displayName} </p>
+        <p class="product-price">Price: ${obj.price}</p>
+        <p class="product-quantity">Quantity: </p>
+        <p id="quantity-${obj.productID}" class="quantity-number">${obj.itemQuantity}</p>
+        <button id="remove-product-${obj.productID}" class="remove-product-btn btn-type-2" onclick="removeProduct(${obj.productID})">Remove</button>
+        <button id="increase-${obj.productID}" class="quantity-inc-btn btn-type-2" onclick="increaseFunction(${obj.productID})"> + </button>
+        <button id="decrease-${obj.productID}" class="quantity-dec-btn btn-type-2" onclick="decreaseFunction(${obj.productID})"> - </button>`;
+    parentDiv.appendChild(childItem);
+  }
+
+  function sendUpdateCartRequest(id, flag) {
+    let request = new XMLHttpRequest();
+    request.open("post", "/cart/updateCart");
+    request.setRequestHeader("Content-Type", "application/json");
+    request.send(JSON.stringify({ productID: id, flag: flag }));
+    request.addEventListener("load", () => {
+      if (request.status == 200) {
+        let quantityElement = document.getElementById(`quantity-${id}`);
+        console.log(quantityElement);
+        if (flag) quantityElement.innerText = `${quantityElement.innerText-1+2}`;
+        else {
+          let x = quantityElement.innerText - 1;
+          if (x < 1) {
+            let tempParent = document.getElementById("parentDiv");
+            let tempChild = document.getElementById(`grid-div-${id}`);
+            tempParent.removeChild(tempChild);
+            return;
+          } else {
+            quantityElement.innerText = `${x}`;
+            return;
+          }
+        }
+      }
+    });
+  }
+
+  function increaseFunction(objId) {
+    sendUpdateCartRequest(objId, true);
+  }
+
+  function decreaseFunction(objId) {
+    sendUpdateCartRequest(objId, false);
+  }
+  function removeProduct(objId) {
+    let addItem = new XMLHttpRequest();
+    addItem.open("post", "/cart/removeProduct");
+    addItem.setRequestHeader("Content-Type", "application/json");
+    addItem.send(JSON.stringify({ productID: objId }));
+    addItem.onload = function () {
+      if (addItem.status == 200) {
+        let tempParent = document.getElementById("parentDiv");
+        let tempChild = document.getElementById(`grid-div-${objId}`);
+        tempParent.removeChild(tempChild);
+      }
+    };
+  }
+</script>

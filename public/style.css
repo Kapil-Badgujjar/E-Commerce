@@ -1,0 +1,76 @@
+*{
+    margin: 0;
+    padding: 0;
+}
+body{
+    background-image: url('bkg.jpg');
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+form{
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -70%);
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    width: 35%;
+    margin: auto;
+    box-shadow: 2px 2px 10px 0 rgba(0,0,0,0.4);
+    padding: 50px 15px;
+    background-color: #ffffff4c;
+    backdrop-filter:
+    blur(15px)
+    saturate(200%);
+    border-radius: 10px;
+}
+label{
+    margin-top: 10px;
+    margin-bottom: 5px;
+}
+input{
+    background-color: rgba(238, 255, 210, 0.521);
+    padding: 5px;
+    border: 1px solid rgb(119, 155, 255);
+    border-radius: 3px;
+    /* backdrop-filter: blur(15px); */
+    backdrop-filter:
+    blur(15px)
+    saturate(200%);
+}
+input:focus{
+    border: 1px solid blue;
+    outline: none;
+}
+.btn{
+    cursor: pointer;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    margin-left: auto;
+    color: white;
+    background-color: rgb(0, 0, 213);
+    border-radius: 5px;
+    font-weight: bold;
+    padding: 0 10px;
+    height: 40px;
+    width:fit-content;
+    border: none !important;
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.4);
+}
+.btn:hover{
+    background-color: rgb(26, 26, 246);
+}
+.btn:active{
+    background-color: rgb(221, 0, 129);
+}
+
+#errmsg{
+    box-sizing: border-box;
+    text-align: center;
+    padding: 3px;
+    font-size: 1rem;
+    font-weight: bold;
+    height: 25px;
+    border-radius: 3px;
+}

@@ -1,0 +1,141 @@
+<% if(status==0){ %>
+<style>
+    .header-div{
+        box-sizing: border-box;
+        width: 100vw;
+        padding: 0 3% 0 1%;
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+        gap: 3%;
+        background-color: rgb(247, 165, 0);
+        height: 8vh;
+        position: fixed;
+        top: 0;
+        z-index: 5;
+    }
+    .logo-div{
+        font-size: 2rem;
+        margin-right: auto;
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+    }
+    .navbar-btn{
+        color: white;
+        background-color: rgb(0, 0, 56);
+        border: none;
+        border-radius: 5px;
+        font-weight: bold;
+        height: 60%;
+        padding: 0 12px;
+    }
+    .navbar-btn:hover{
+        background-color:rgb(1, 1, 159);
+        box-shadow: 2px 2px 8px rgba(255, 25, 163, 0.903);
+    }
+    .navbar-btn:active{
+        background-color: rgb(64, 53, 255);
+        box-shadow: 2px 2px 8px rgba(255, 8, 156, 0.815);
+    }
+    .logo{
+        max-width: 50px;
+        border-radius: 50%;
+        margin-right: 10px;
+    }
+</style>
+
+<div class="header-div">
+    <% if(msg!=undefined){ %>
+        <div class="logo-div">
+            <img class="logo" src="/logo.jpg" alt="logo image">
+            <span class="logo-text">Welcome <%= msg %></span>
+        </div>
+        <button class="navbar-btn" id="user-cart" onclick="cart()">Go to Cart</button>
+        <button class="navbar-btn" id="update-password" onclick="updatePassword()">Update Password</button>
+        <button class="navbar-btn" id="logout-btn" onclick="logout()">Logout</button>
+    <% } else{ %>
+        <div class="logo-div">
+            <img class="logo" src="/logo.jpg" alt="logo image">
+            <span class="logo-text">WELCOME TO ONLINE SHOPPING</span>
+        </div>
+        <button class="navbar-btn" id="login-btn" onclick="login()">Login</button>
+        <button class="navbar-btn" id="create-new-account-btn" onclick="newAccount()">Create New Account </button>
+    <% } %>
+</div>
+
+<script type="text/javascript">
+    window.addEventListener("load", function(){
+        if(window.location.pathname=='/cart/openCart'){
+            let x = document.getElementById("user-cart");
+            x.innerText= "Go to homepage";
+            x.removeEventListener("click", cart);
+            x.addEventListener('click',login)
+        }
+    });
+    function login() {
+        window.location.href='/login';
+    }
+    function logout() {
+        window.location.href='/user/logout';
+    }
+    function cart(){
+        window.location.href='/cart/openCart';
+    }
+    function updatePassword(){
+        window.location.href='/user/updatePassword';
+    }
+    function newAccount(){
+        window.location.href='/signup';
+    }
+</script>
+<% }else if(status==1){ %>
+    <style>
+        *{
+            padding: 0;
+            margin: 0;
+        }
+        .header-div{
+            box-sizing: border-box;
+            width: 100vw;
+            padding: 0 3%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 3%;
+            color: white;
+            height: 8vh;
+        }
+        p{
+            font-size: 2.5rem;
+        }
+    </style>
+    
+        <% if(msg==1){ %>
+            <div class="header-div" style="background-color: rgb(3, 175, 92);">
+                <p>Login to your Account</p>
+            </div>
+        <% } else if(msg==2){ %>
+            <div class="header-div" style="background-color: rgb(0, 111, 190);">
+                <p>Create New Account</p>
+            </div>
+        <% }else if(msg==3){ %>
+            <div class="header-div" style="background-color: rgb(207, 0, 169);">
+                <p>Find your account</p>
+            </div>
+        <% }else if(msg==4){ %>
+            <div class="header-div" style="background-color: rgb(235, 0, 0);">
+                <p>Reset Password</p>
+            </div>
+        <% }else if(msg==5){ %>
+            <div class="header-div" style="background-color: rgb(235, 0, 0);">
+                <p>Update Password</p>
+            </div>
+        <% }else{ %>
+            <div class="header-div" style="background-color: rgb(234, 125, 0);">
+                <p>Welcome to Admin Panel</p>
+            </div>
+        <% } %>
+<% }else{ %>
+
+<% } %>

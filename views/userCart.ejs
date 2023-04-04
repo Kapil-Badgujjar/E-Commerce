@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Cart</title>
+    <link rel="stylesheet" href="/btn-type-2.css" type="text/css">
+</head>
+<body>
+    <header>
+        <%- include('header',{status: 0, msg: msg}); %>
+    </header>
+
+    <main>
+        <%- include('cartProducts'); %>
+    </main>
+
+    <footer>
+        <!-- <div><button id="buyButton"></button></div> -->
+    </footer>
+    <script type="text/javascript">
+        let buyButton = document.getElementById('buyButton');
+    </script>
+</body>
+</html>
